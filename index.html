@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fuga · A2 第1单元 练习</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #e8edf2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            max-width: 100%;
+            background: #f4f9f7;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 844px;
+            max-height: 100vh;
+            border-radius: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+
+        .pages-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 8px 20px 20px 20px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .pages-container::-webkit-scrollbar {
+            width: 0;
+            display: none;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0 4px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .page-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            letter-spacing: -0.3px;
+        }
+        .page-header h1 span {
+            color: #4a9e8e;
+        }
+        .page-header .sub {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 400;
+            background: #eef2f6;
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .mode-tab {
+            flex: 1;
+            min-width: 70px;
+            padding: 10px 0;
+            border: 2px solid #d5dce4;
+            border-radius: 30px;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            text-align: center;
+        }
+        .mode-tab.active {
+            background: #4a9e8e;
+            border-color: #4a9e8e;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(74, 158, 142, 0.25);
+        }
+        .mode-tab i {
+            margin-right: 4px;
+        }
+
+        .sub-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            padding: 0 4px;
+        }
+        .sub-tab {
+            padding: 6px 16px;
+            border: 2px solid #d5dce4;
+            border-radius: 20px;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            text-align: center;
+        }
+        .sub-tab.active {
+            background: #4a9e8e;
+            border-color: #4a9e8e;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(74, 158, 142, 0.25);
+        }
+
+        .card-counter {
+            text-align: center;
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .card-counter strong {
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        .flashcard {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 28px 24px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(200, 212, 220, 0.25);
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chinese-prompt {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1.4;
+            margin-bottom: 18px;
+            text-align: left;
+            word-break: break-word;
+            padding: 4px 0;
+        }
+        .chinese-prompt.center {
+            text-align: center;
+        }
+        .chinese-prompt .hint {
+            color: #b0b8c0;
+            font-weight: 400;
+            font-size: 0.85em;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .input-row input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #d5dce4;
+            border-radius: 30px;
+            font-size: 18px;
+            font-family: inherit;
+            background: #f8fafc;
+            outline: none;
+            transition: 0.2s;
+            color: #2c3e50;
+            min-width: 0;
+        }
+        .input-row input:focus {
+            border-color: #4a9e8e;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(74, 158, 142, 0.12);
+        }
+        .input-row input::placeholder {
+            color: #b0c4d0;
+            font-size: 15px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .action-row button {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 4px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .action-row button:active {
+            transform: scale(0.95);
+        }
+        .btn-check {
+            background: #4a9e8e;
+            color: #fff;
+            flex: 1.2;
+        }
+        .btn-check:active {
+            background: #3a7a6e;
+        }
+        .btn-reveal {
+            background: #e8f0ee;
+            color: #4a9e8e;
+        }
+        .btn-reveal:active {
+            background: #d5e0dc;
+        }
+        .btn-prev {
+            background: #eef2f6;
+            color: #2c3e50;
+        }
+        .btn-prev:active {
+            background: #dce4ec;
+        }
+        .btn-prev:disabled {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .btn-next {
+            background: #eef2f6;
+            color: #2c3e50;
+        }
+        .btn-next:active {
+            background: #dce4ec;
+        }
+
+        .result-box {
+            margin-top: 16px;
+            padding: 14px 18px;
+            border-radius: 20px;
+            background: #f8fafc;
+            border: 1px solid #e2eaf2;
+            min-height: 60px;
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            transition: 0.2s;
+            line-height: 1.8;
+            word-break: break-word;
+        }
+        .result-box .hint-empty {
+            color: #a0b4c4;
+            font-weight: 400;
+            font-size: 15px;
+        }
+        .result-box .correct-answer {
+            color: #1d7a5e;
+            background: #e3f3ec;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        .result-box .wrong-highlight {
+            background: #ffd9d9;
+            color: #b33c3c;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .result-box .user-input-text {
+            color: #2c3e50;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+        }
+        .result-box .answer-label {
+            color: #7f8c8d;
+            font-size: 15px;
+            font-weight: 400;
+        }
+        .result-box .missing-char {
+            background: #ffd9d9;
+            color: #b33c3c;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .result-box .full-correct {
+            color: #1d7a5e;
+            background: #e3f3ec;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        .missing-placeholder {
+            display: inline-block;
+            width: 0.7em;
+            min-width: 0.5em;
+            height: 1.2em;
+            border-bottom: 2.5px solid #b33c3c;
+            margin: 0 1px;
+            background: #ffd9d9;
+            border-radius: 2px;
+        }
+        .missing-space {
+            display: inline-block;
+            width: 0.5em;
+            min-width: 0.3em;
+            height: 1.2em;
+            border-bottom: 2.5px solid #b33c3c;
+            margin: 0 1px;
+            background: #ffd9d9;
+            border-radius: 2px;
+        }
+
+        .bottom-meta {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #a0b4c4;
+            padding: 0 4px;
+        }
+        .bottom-meta .progress-text {
+            background: #eef2f6;
+            padding: 4px 16px;
+            border-radius: 30px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .footer-copyright {
+            margin-top: 20px;
+            padding: 16px 12px 8px 12px;
+            border-top: 1px solid #e0e8ee;
+            text-align: center;
+            font-size: 12px;
+            color: #9aabb8;
+            line-height: 1.8;
+            letter-spacing: 0.3px;
+        }
+        .footer-copyright .brand {
+            font-weight: 600;
+            color: #4a9e8e;
+            letter-spacing: 0.5px;
+        }
+        .footer-copyright .wechat {
+            color: #7f8c8d;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+            background: #f0f4f8;
+            padding: 2px 10px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 420px) {
+            .phone-frame {
+                width: 100%;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+            body {
+                padding: 0;
+                background: #f4f9f7;
+            }
+            .pages-container {
+                padding: 8px 16px 20px 16px;
+            }
+            .flashcard {
+                padding: 20px 16px 16px;
+                min-height: 200px;
+            }
+            .chinese-prompt {
+                font-size: 22px;
+            }
+            .input-row input {
+                font-size: 16px;
+                padding: 12px 16px;
+            }
+            .action-row button {
+                font-size: 12px;
+                padding: 10px 2px;
+                min-width: 0;
+            }
+            .result-box {
+                font-size: 16px;
+                padding: 12px 14px;
+                min-height: 50px;
+            }
+            .result-box .user-input-text {
+                font-size: 16px;
+            }
+            .footer-copyright {
+                font-size: 11px;
+                padding: 12px 8px 6px 8px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .mode-tab {
+                font-size: 12px;
+                min-width: 55px;
+                padding: 8px 0;
+            }
+            .chinese-prompt {
+                font-size: 20px;
+            }
+            .input-row input {
+                font-size: 15px;
+                padding: 10px 14px;
+            }
+            .action-row button {
+                font-size: 11px;
+                padding: 8px 2px;
+            }
+            .result-box {
+                font-size: 15px;
+                padding: 10px 12px;
+            }
+            .result-box .user-input-text {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-frame">
+    <div class="pages-container" id="pagesContainer">
+        <div class="page-header">
+            <h1>✨ <span>Fuga</span> 学员专属</h1>
+            <span class="sub"><i class="fas fa-pen"></i> A2 第1单元</span>
+        </div>
+
+        <div class="mode-tabs" id="modeTabs">
+            <button class="mode-tab active" data-section="0"><i class="fas fa-edit"></i> 动词变位</button>
+            <button class="mode-tab" data-section="1"><i class="fas fa-comment"></i> 常用句</button>
+            <button class="mode-tab" data-section="2"><i class="fas fa-book"></i> 新视线</button>
+            <button class="mode-tab" data-section="3"><i class="fas fa-plus-circle"></i> Espresso</button>
+        </div>
+
+        <div class="sub-tabs" id="subTabs" style="display:none;"></div>
+
+        <div class="card-counter">
+            第 <strong id="currentNum">1</strong> / <span id="totalNum">0</span> 题
+        </div>
+
+        <div class="flashcard" id="flashcard">
+            <div class="chinese-prompt" id="chinesePrompt">你好！</div>
+
+            <div class="input-row">
+                <input type="text" id="userInput" placeholder="输入意大利语..." autocomplete="off" autofocus>
+            </div>
+
+            <div class="action-row">
+                <button class="btn-check" id="checkBtn"><i class="fas fa-check"></i> 检查</button>
+                <button class="btn-reveal" id="revealBtn"><i class="fas fa-eye"></i> 答案</button>
+                <button class="btn-prev" id="prevBtn"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn-next" id="nextBtn"><i class="fas fa-arrow-right"></i> 下一题</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <span class="hint-empty">✏️ 输入后点击「检查」</span>
+            </div>
+        </div>
+
+        <div class="bottom-meta">
+            <span>📚 已掌握 <span id="learnedCount">0</span></span>
+            <span class="progress-text" id="progressText">0%</span>
+        </div>
+
+        <div class="footer-copyright">
+            <div class="brand">口袋意语 · Fuga意大利语工作室</div>
+            <div style="font-size: 11px; color: #b0c4d0;">内部学习资料 · 未经授权不得转载、商用</div>
+            <div style="margin-top: 4px;">
+                <span class="wechat"><i class="fab fa-weixin" style="margin-right: 4px; color: #4a9e8e;"></i> FCFCFCZXFC</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // 辅助函数
+    // ============================================================
+    function formatChinese(text) {
+        return text.replace(/（[^）]*）/g, function(match) {
+            return `<span class="hint">${match}</span>`;
+        });
+    }
+
+    function stripAccents(str) {
+        const accentMap = {
+            'à': 'a', 'á': 'a', 'â': 'a', 'ä': 'a',
+            'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
+            'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
+            'ò': 'o', 'ó': 'o', 'ô': 'o', 'ö': 'o',
+            'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u',
+            'À': 'A', 'Á': 'A', 'Â': 'A', 'Ä': 'A',
+            'È': 'E', 'É': 'E', 'Ê': 'E', 'Ë': 'E',
+            'Ì': 'I', 'Í': 'I', 'Î': 'I', 'Ï': 'I',
+            'Ò': 'O', 'Ó': 'O', 'Ô': 'O', 'Ö': 'O',
+            'Ù': 'U', 'Ú': 'U', 'Û': 'U', 'Ü': 'U'
+        };
+        return str.split('').map(ch => accentMap[ch] || ch).join('');
+    }
+
+    function isSubjectPronoun(word) {
+        const pronouns = ['io', 'tu', 'lui', 'lei', 'noi', 'voi', 'loro', 'Lei'];
+        return pronouns.includes(word.toLowerCase());
+    }
+
+    function removeSubjectPronouns(input) {
+        const words = input.split(/\s+/);
+        const filtered = words.filter(word => !isSubjectPronoun(word));
+        return filtered.join(' ');
+    }
+
+    function isLetterOrDigit(ch) {
+        return /[a-zA-Z0-9]/.test(ch);
+    }
+
+    function normalizeForCompare(str) {
+        return stripAccents(str).toLowerCase().split('').filter(ch => isLetterOrDigit(ch)).join('');
+    }
+
+    // ============================================================
+    // 标色算法：缺什么空什么，错误标红（修复版）
+    // ============================================================
+    function highlightDiff(userInput, correctAnswer) {
+        // 1. 去掉主语人称代词
+        const userCleaned = removeSubjectPronouns(userInput);
+        const correctCleaned = removeSubjectPronouns(correctAnswer);
+
+        // 2. 如果用户输入为空
+        if (userInput.trim() === '') {
+            return {
+                html: `<span class="user-input-text">（未输入）</span>`,
+                isCorrect: false
+            };
+        }
+
+        // 3. 检查是否完全匹配（忽略重音和大小写，但保留原始字符比较）
+        const userNorm = normalizeForCompare(userCleaned);
+        const correctNorm = normalizeForCompare(correctCleaned);
+        if (userNorm === correctNorm) {
+            return {
+                html: `<span class="full-correct">✅ ${correctAnswer}</span>`,
+                isCorrect: true
+            };
+        }
+
+        const uChars = userCleaned.split('');
+        const cChars = correctCleaned.split('');
+
+        let output = '';
+        let isCorrect = true;
+        let uIdx = 0, cIdx = 0;
+
+        while (uIdx < uChars.length || cIdx < cChars.length) {
+            // 如果用户字符已用完
+            if (uIdx >= uChars.length) {
+                const missing = cChars[cIdx];
+                if (missing === ' ') {
+                    output += `<span class="missing-space"></span>`;
+                } else {
+                    output += `<span class="missing-placeholder"></span>`;
+                }
+                cIdx++;
+                isCorrect = false;
+                continue;
+            }
+
+            // 如果正确答案字符已用完
+            if (cIdx >= cChars.length) {
+                output += `<span class="wrong-highlight">${uChars[uIdx]}</span>`;
+                uIdx++;
+                isCorrect = false;
+                continue;
+            }
+
+            const uNorm = stripAccents(uChars[uIdx]).toLowerCase();
+            const cNorm = stripAccents(cChars[cIdx]).toLowerCase();
+
+            if (uNorm === cNorm) {
+                output += uChars[uIdx];
+                uIdx++;
+                cIdx++;
+            } else {
+                // 向前看：用户当前字符是否匹配正确答案后面的某个字符（用户漏掉了中间字符）
+                let found = false;
+                let lookAhead = 1;
+                while (cIdx + lookAhead < cChars.length && lookAhead <= 8) {
+                    const futureCNorm = stripAccents(cChars[cIdx + lookAhead]).toLowerCase();
+                    if (futureCNorm === uNorm) {
+                        // 用户漏掉了中间字符
+                        for (let k = 0; k < lookAhead; k++) {
+                            const missing = cChars[cIdx + k];
+                            if (missing === ' ') {
+                                output += `<span class="missing-space"></span>`;
+                            } else {
+                                output += `<span class="missing-placeholder"></span>`;
+                            }
+                        }
+                        cIdx += lookAhead;
+                        output += uChars[uIdx];
+                        uIdx++;
+                        cIdx++;
+                        found = true;
+                        isCorrect = false;
+                        break;
+                    }
+                    lookAhead++;
+                }
+
+                if (!found) {
+                    // 检查正确答案当前字符是否匹配用户后面的某个字符（用户多打了字符）
+                    let foundInUser = false;
+                    let lookAheadU = 1;
+                    while (uIdx + lookAheadU < uChars.length && lookAheadU <= 8) {
+                        const futureUNorm = stripAccents(uChars[uIdx + lookAheadU]).toLowerCase();
+                        if (futureUNorm === cNorm) {
+                            // 用户多了字符
+                            for (let k = 0; k < lookAheadU; k++) {
+                                output += `<span class="wrong-highlight">${uChars[uIdx + k]}</span>`;
+                            }
+                            uIdx += lookAheadU;
+                            output += uChars[uIdx];
+                            uIdx++;
+                            cIdx++;
+                            foundInUser = true;
+                            isCorrect = false;
+                            break;
+                        }
+                        lookAheadU++;
+                    }
+
+                    if (!foundInUser) {
+                        // 真正不匹配
+                        output += `<span class="wrong-highlight">${uChars[uIdx]}</span>`;
+                        uIdx++;
+                        if (cIdx < cChars.length) {
+                            const missing = cChars[cIdx];
+                            if (missing === ' ') {
+                                output += `<span class="missing-space"></span>`;
+                            } else {
+                                output += `<span class="missing-placeholder"></span>`;
+                            }
+                            cIdx++;
+                        }
+                        isCorrect = false;
+                    }
+                }
+            }
+        }
+
+        return {
+            html: `<span class="user-input-text">${output}</span> <span class="answer-label">→ 正确:</span> <span class="correct-answer">${correctAnswer}</span>`,
+            isCorrect: isCorrect
+        };
+    }
+
+    // ============================================================
+    // 数据 —— A2 第1单元（已按你的要求修改）
+    // ============================================================
+    const SECTIONS = [
+        {
+            name: '动词变位',
+            align: 'left',
+            pairs: [
+                { chinese: '说话（原形）', italian: 'parlare' },
+                { chinese: '我（过去）说话', italian: 'parlavo' },
+                { chinese: '你（过去）说话', italian: 'parlavi' },
+                { chinese: '他/她/您（过去）说话', italian: 'parlava' },
+                { chinese: '我们（过去）说话', italian: 'parlavamo' },
+                { chinese: '你们（过去）说话', italian: 'parlavate' },
+                { chinese: '他们（过去）说话', italian: 'parlavano' },
+                { chinese: '生活（原形）', italian: 'vivere' },
+                { chinese: '我（过去）生活', italian: 'vivevo' },
+                { chinese: '你（过去）生活', italian: 'vivevi' },
+                { chinese: '他/她/您（过去）生活', italian: 'viveva' },
+                { chinese: '我们（过去）生活', italian: 'vivevamo' },
+                { chinese: '你们（过去）生活', italian: 'vivevate' },
+                { chinese: '他们（过去）生活', italian: 'vivevano' },
+                { chinese: '睡觉（原形）', italian: 'dormire' },
+                { chinese: '我（过去）睡觉', italian: 'dormivo' },
+                { chinese: '你（过去）睡觉', italian: 'dormivi' },
+                { chinese: '他/她/您（过去）睡觉', italian: 'dormiva' },
+                { chinese: '我们（过去）睡觉', italian: 'dormivamo' },
+                { chinese: '你们（过去）睡觉', italian: 'dormivate' },
+                { chinese: '他们（过去）睡觉', italian: 'dormivano' },
+                { chinese: '是（原形）', italian: 'essere' },
+                { chinese: '我（过去）是', italian: 'ero' },
+                { chinese: '你（过去）是', italian: 'eri' },
+                { chinese: '他/她/您（过去）是', italian: 'era' },
+                { chinese: '我们（过去）是', italian: 'eravamo' },
+                { chinese: '你们（过去）是', italian: 'eravate' },
+                { chinese: '他们（过去）是', italian: 'erano' },
+                { chinese: '做（原形）', italian: 'fare' },
+                { chinese: '我（过去）做', italian: 'facevo' },
+                { chinese: '你（过去）做', italian: 'facevi' },
+                { chinese: '他/她/您（过去）做', italian: 'faceva' },
+                { chinese: '我们（过去）做', italian: 'facevamo' },
+                { chinese: '你们（过去）做', italian: 'facevate' },
+                { chinese: '他们（过去）做', italian: 'facevano' },
+                { chinese: '说（原形）', italian: 'dire' },
+                { chinese: '我（过去）说', italian: 'dicevo' },
+                { chinese: '你（过去）说', italian: 'dicevi' },
+                { chinese: '他/她/您（过去）说', italian: 'diceva' },
+                { chinese: '我们（过去）说', italian: 'dicevamo' },
+                { chinese: '你们（过去）说', italian: 'dicevate' },
+                { chinese: '他们（过去）说', italian: 'dicevano' },
+                { chinese: '喝（原形）', italian: 'bere' },
+                { chinese: '我（过去）喝', italian: 'bevevo' },
+                { chinese: '你（过去）喝', italian: 'bevevi' },
+                { chinese: '他/她/您（过去）喝', italian: 'beveva' },
+                { chinese: '我们（过去）喝', italian: 'bevevamo' },
+                { chinese: '你们（过去）喝', italian: 'bevevate' },
+                { chinese: '他们（过去）喝', italian: 'bevevano' }
+            ]
+        },
+        {
+            name: '常用句',
+            align: 'left',
+            pairs: [
+                { chinese: '天气很冷。', italian: 'Faceva freddo.' },
+                { chinese: '天气晴朗。（有太阳）', italian: 'C\'era il sole.' },
+                { chinese: '天空多云。', italian: 'Il cielo era nuvoloso.' },
+                { chinese: '街道空无一人。', italian: 'Le strade erano vuote.' },
+                { chinese: '我（男性）累极了。', italian: 'Ero stanchissimo.' },
+                { chinese: '他/她很饿。', italian: 'Aveva fame.' },
+                { chinese: '我在想……', italian: 'Pensavo che...' },
+                { chinese: '当时是午夜。', italian: 'Era mezzanotte.' },
+                { chinese: '当时是星期天。', italian: 'Era domenica.' },
+                { chinese: '我二十岁。', italian: 'Avevo vent\'anni.' },
+                { chinese: '我步行去上学。', italian: 'Andavo a scuola a piedi.' },
+                { chinese: '奶奶讲故事。', italian: 'La nonna raccontava storie.' },
+                { chinese: '我们在花园里玩。', italian: 'Giocavamo in giardino.' },
+                { chinese: '我在海边度过夏天。', italian: 'Passavo le estati al mare.' },
+                { chinese: '我总是七点起床。', italian: 'Mi alzavo sempre alle 7.' },
+                { chinese: '当我吃饭的时候，他在看电视。', italian: 'Mentre io mangiavo, lui guardava la TV.' },
+                { chinese: '当你睡觉的时候，我在工作。', italian: 'Mentre tu dormivi, io lavoravo.' },
+                { chinese: '当她唱歌的时候，他们在跳舞。', italian: 'Mentre lei cantava, loro ballavano.' },
+                { chinese: '当我们玩的时候，你们在学习。', italian: 'Mentre noi giocavamo, voi studiavate.' },
+                { chinese: '我正在睡觉，这时包裹到了。', italian: 'Dormivo quando è arrivato il pacco.' },
+                { chinese: '我正在等公交车，这时我看见了马可。', italian: 'Aspettavo l\'autobus quando ho visto Marco.' },
+                { chinese: '我正在打电话，这时教授进来了。', italian: 'Parlavo al telefono quando è entrato il professore.' },
+                { chinese: '我正在街上走，这时我找到了一枚硬币。', italian: 'Camminavo per strada quando ho trovato una moneta.' }
+            ]
+        },
+        {
+            name: '新视线',
+            align: 'left',
+            subSections: [
+                {
+                    name: 'A',
+                    pairs: [
+                        { chinese: '我（女性）和Lorenzo去了电影院。', italian: 'Sono andata al cinema con Lorenzo.' },
+                        { chinese: '我们看了Muccino的最新电影。', italian: 'Abbiamo visto l\'ultimo film di Muccino.' },
+                        { chinese: '你们做得对。', italian: 'Avete fatto bene.' },
+                        { chinese: '我（女性）一整天都待在家里。', italian: 'Sono stata a casa tutto il giorno.' },
+                        { chinese: '（听你这么说）我很抱歉。', italian: 'Mi dispiace.' },
+                        { chinese: '太好笑了！', italian: 'Che ridere!' },
+                        { chinese: 'Lorenzo是个喜剧人物！', italian: 'Lorenzo è un personaggio da commedia!' },
+                        { chinese: '我们花了半小时选电影。', italian: 'Siamo stati mezz\'ora a scegliere il film da vedere.' },
+                        { chinese: '因为Lorenzo什么都不喜欢。', italian: 'Perché a Lorenzo non piaceva niente.' },
+                        { chinese: '实际上他想看一部动作片。', italian: 'In realtà voleva vedere un film d\'azione.' },
+                        { chinese: '然后我们终于选了Muccino的电影。', italian: 'Poi finalmente abbiamo scelto il film di Muccino.' },
+                        { chinese: '非常好看，只是最后Lorenzo看起来很困惑。', italian: 'Molto bello, solo che alla fine Lorenzo sembrava confuso.' },
+                        { chinese: '什么意思？情节很复杂吗？', italian: 'In che senso? Storia complicata?' },
+                        { chinese: '哪儿啊！当我们聊电影的时候，他发表了一些奇怪的评论。', italian: 'Macché! Mentre parlavamo del film, lui faceva dei commenti strani.' },
+                        { chinese: '然后我明白了。', italian: 'Poi ho capito.' },
+                        { chinese: '看电影的时候他在睡觉。', italian: 'Durante il film lui dormiva.' },
+                        { chinese: '他错过了整部电影？', italian: 'Ha perso tutto il film?' },
+                        { chinese: '我不知道。', italian: 'Non so.' },
+                        { chinese: '也许一半吧。', italian: 'Forse la metà.' },
+                        { chinese: '我也在电视上看了一部电影。', italian: 'Anch\'io ho visto un film in televisione.' },
+                        { chinese: '恐怖片真不是我的菜！', italian: 'I film dell\'orrore non sono proprio il mio genere!' },
+                        { chinese: 'Gianna和Lorenzo在电影院看了什么电影？', italian: 'Che film hanno visto Gianna e Lorenzo al cinema?' },
+                        { chinese: '为什么Lorenzo在电影结束时很困惑？', italian: 'Perché Lorenzo era confuso alla fine del film?' },
+                        { chinese: 'Michela晚上是怎么度过的？', italian: 'Come ha passato la serata Michela?' }
+                    ]
+                },
+                {
+                    name: 'B',
+                    pairs: [
+                        { chinese: '这是Marta家的聚会！你还记得吗？', italian: 'È la festa a casa di Marta! Ricordi?' },
+                        { chinese: '我不记得了。', italian: 'Non mi ricordo.' },
+                        { chinese: '天哪，没错！', italian: 'Oddio, è vero!' },
+                        { chinese: '我们当时还在上大学。多么美好的时光啊！', italian: 'Eravamo all\'università. Che bei tempi!' },
+                        { chinese: '我们会学一整周。', italian: 'Studiavamo tutta la settimana.' },
+                        { chinese: '周六我们总是组织聚会。', italian: 'Il sabato organizzavamo sempre una festa.' },
+                        { chinese: '那天晚上你认识了Franco。', italian: 'Quella sera hai conosciuto Franco.' },
+                        { chinese: '他挺讨人喜欢的呀！', italian: 'Era simpatico!' },
+                        { chinese: 'emm，怎么说呢……他有点浮夸。', italian: 'Beh, insomma... era un po\' esagerato.' },
+                        { chinese: '他甚至找到了我的电话号码！', italian: 'È riuscito anche a trovare il mio numero di telefono!' },
+                        { chinese: '真的吗？', italian: 'Davvero?' },
+                        { chinese: '当然！', italian: 'Certo!' },
+                        { chinese: '你知道他有一次做了什么吗？', italian: 'E sai cosa ha fatto una volta?' },
+                        { chinese: '我在上课的时候，他来了大学，拿着一束花走进了教室！', italian: 'Mentre io ero a lezione, è venuto all\'università ed è entrato in aula con un mazzo di fiori!' },
+                        { chinese: '真的吗？！', italian: 'Veramente?!' },
+                        { chinese: '如果我没记错的话，我们还一起出去过一次。', italian: 'Se ricordo bene, una volta siamo anche usciti.' },
+                        { chinese: '他人不坏，只是有点儿特别。', italian: 'Non era cattivo, solo un po\' particolare.' },
+                        { chinese: '他总是开玩笑。', italian: 'Scherzava sempre.' },
+                        { chinese: '你是怎么认识Gianna的？', italian: 'Come hai conosciuto Gianna?' },
+                        { chinese: '那是六月的一个晚上，我在Matteo的聚会上。', italian: 'Era una sera di giugno ed ero alla festa di Matteo.' },
+                        { chinese: '当我在打电话的时候，我注意到一个女孩在开玩笑和大笑。', italian: 'Mentre parlavo al telefono, ho notato una ragazza che scherzava e rideva.' },
+                        { chinese: '她非常美丽。', italian: 'Era bellissima.' },
+                        { chinese: '她留着长发，穿着黑裤子和白T。', italian: 'Aveva i capelli lunghi, portava dei pantaloni neri e una maglietta bianca.' },
+                        { chinese: '她看起来很友善，也很温柔。', italian: 'Sembrava simpatica e molto dolce.' },
+                        { chinese: '我想和她说话，但我有点紧张。', italian: 'Volevo parlare con lei, ma ero un po\' nervoso.' },
+                        { chinese: '最后她向我走了过来，于是我们聊了一会儿。', italian: 'Alla fine è venuta lei da me e così abbiamo parlato un po\'.' },
+                        { chinese: '离开之前，我向Matteo要了Gianna的电话号码。', italian: 'Prima di andare via, ho chiesto a Matteo il numero di telefono di Gianna.' },
+                        { chinese: '那是三月的一个早晨。', italian: 'Era un mattino di marzo.' },
+                        { chinese: '刚开始天气很好。', italian: 'All\'inizio faceva bel tempo.' },
+                        { chinese: '孩子们非常高兴能参观比萨。', italian: 'I bambini erano molto felici di visitare Pisa.' },
+                        { chinese: '然而过了一会儿，开始下雨了。', italian: 'Dopo un po\', però, ha cominciato a piovere.' },
+                        { chinese: '持续下了另外两个小时雨。', italian: 'Ha continuato a piovere per altre due ore.' },
+                        { chinese: '当我们到达比萨时，还在下雨。', italian: 'Quando siamo arrivati a Pisa, pioveva ancora.' },
+                        { chinese: '街上没有很多人。', italian: 'Non c\'era molta gente in giro.' },
+                        { chinese: '我们都迫不及待，因为我们想登上比萨斜塔。', italian: 'Eravamo tutti impazienti perché volevamo salire sulla Torre pendente.' }
+                    ]
+                },
+                {
+                    name: 'C',
+                    pairs: [
+                        { chinese: '你昨天没跟我们一起来真是选对了。', italian: 'Hai fatto bene a non venire con noi ieri.' },
+                        { chinese: '简直是一场灾难！', italian: 'È stata una tragedia!' },
+                        { chinese: '发生什么事了？', italian: 'Cos\'è successo?' },
+                        { chinese: '我和一个朋友（女性）本来决定去看电影。', italian: 'Io ed un\'amica avevamo deciso di andare al cinema.' },
+                        { chinese: '她又邀请了另一个朋友（女性）。', italian: 'Ha invitato anche un\'altra amica.' },
+                        { chinese: '那有什么奇怪的？', italian: 'E che c\'è di strano?' },
+                        { chinese: '等等，我还没说完！', italian: 'Aspetta, non ho finito!' },
+                        { chinese: '（那部电影）不怎么样。', italian: 'Non era un granché.' },
+                        { chinese: '所以就不看电影了？', italian: 'Allora niente film?' },
+                        { chinese: '你明白了吗？', italian: 'Hai capito?' },
+                        { chinese: '最后，你们做了什么？', italian: 'Alla fine, cosa avete fatto?' },
+                        { chinese: '我们决定去吃饭。', italian: 'Abbiamo deciso di andare a mangiare.' },
+                        { chinese: '那个朋友（女性）想去一个她从来没去过的地方。', italian: 'Quell\'amica voleva andare in un posto dove non era mai stata.' },
+                        { chinese: '我没通过考试，因为我没学习。', italian: 'Non ho passato l\'esame perché non avevo studiato.' },
+                        { chinese: '我（男性）很累，因为我睡得很少。', italian: 'Ero stanco perché avevo dormito poco.' },
+                        { chinese: '我午饭吃了很多，因为我没吃早餐。', italian: 'Ho mangiato molto a pranzo perché non avevo fatto colazione.' },
+                        { chinese: '当我（男性）到车站时，火车已经开走了。', italian: 'Quando sono arrivato alla stazione il treno era già partito.' },
+                        { chinese: '我进不了家，我把钥匙忘在办公室了。', italian: 'Non potevo entrare in casa, avevo dimenticato le chiavi in ufficio.' },
+                        { chinese: '我遇见了Gianna，她还没出发去Palermo。', italian: 'Ho incontrato Gianna, non era ancora partita per Palermo.' }
+                    ]
+                },
+                {
+                    name: 'D',
+                    pairs: [
+                        { chinese: '你觉得Paolo Sorrentino怎么样？', italian: 'Cosa pensi di Paolo Sorrentino?' },
+                        { chinese: '在我看来，他是一位非常优秀的导演。', italian: 'Secondo me, è un bravissimo regista.' },
+                        { chinese: '《绝美之城》我很喜欢！', italian: 'La grande bellezza mi è piaciuto molto!' },
+                        { chinese: '我同意你的看法！', italian: 'Sono d\'accordo con te!' },
+                        { chinese: '事实上，他凭借最佳导演获得了大卫奖。', italian: 'Infatti, ha vinto il David di Donatello per la migliore regia.' },
+                        { chinese: '你喜欢Fellini的电影吗？', italian: 'Ti piacciono i film di Fellini?' },
+                        { chinese: '是的，非常精彩。对我来说最棒的是《阿玛柯德》。', italian: 'Sì, sono geniali. Per me il più bello è Amarcord.' },
+                        { chinese: '我更喜欢《甜蜜生活》！', italian: 'Preferisco La dolce vita!' },
+                        { chinese: '你说得对。', italian: 'Hai ragione.' },
+                        { chinese: 'Sofia Loren获得了奥斯卡最佳女演员奖。', italian: 'Sofia Loren ha vinto un Oscar come migliore attrice.' },
+                        { chinese: '的确如此！', italian: 'È proprio vero!' },
+                        { chinese: '我们不这么认为！', italian: 'Non siamo d\'accordo!' }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Espresso',
+            align: 'left',
+            subSections: [
+                {
+                    name: '1',
+                    pairs: [
+                        { chinese: '孩子们要求我们保护动物。', italian: 'E i bambini ci chiedono di proteggere gli animali.' },
+                        { chinese: '几乎所有的孩子都想要一只动物。', italian: 'Quasi tutti i bambini vorrebbero avere un animale.' },
+                        { chinese: '尽管最喜欢的动物仍然是狗。', italian: 'Anche se l\'animale preferito resta sempre il cane.' },
+                        { chinese: '女生比男生更喜欢猫。', italian: 'Le femmine, più dei maschi, amano i gatti.' },
+                        { chinese: '紧随其后的是马、老虎、鸟、狮子和海豚。', italian: 'Seguono poi il cavallo, le tigri, gli uccelli, i leoni e i delfini.' },
+                        { chinese: '几乎所有人家里都养着或曾经养过动物。', italian: 'Quasi tutti hanno o hanno avuto un animale in casa.' },
+                        { chinese: '只有五分之一的孩子（男性）从未养过动物。', italian: 'Solo un bambino su cinque non ha mai avuto un animale.' }
+                    ]
+                },
+                {
+                    name: '2',
+                    pairs: [
+                        { chinese: '在你的国家最常见的动物是什么？', italian: 'Quali sono gli animali più diffusi nel tuo Paese?' },
+                        { chinese: '你有养动物吗？', italian: 'Hai un animale?' },
+                        { chinese: '你最喜欢的动物是什么？', italian: 'Qual è il tuo animale preferito?' },
+                        { chinese: '你最不喜欢什么动物？', italian: 'Quale animale non ti piace per niente?' },
+                        { chinese: '如果你能变成一种动物，你想变成什么？', italian: 'Ti puoi trasformare in un animale. In quale ti trasformi?' }
+                    ]
+                },
+                {
+                    name: '3',
+                    pairs: [
+                        { chinese: 'Sandra的猫叫Felix。', italian: 'Il gatto di Sandra si chiama Felix.' },
+                        { chinese: 'Laura不喜欢猫。', italian: 'A Laura non piacciono i gatti.' },
+                        { chinese: 'Laura从未养过动物。', italian: 'Laura non ha mai avuto un animale.' },
+                        { chinese: 'Sandra小时候不住在城市里。', italian: 'Sandra da piccola non viveva in città.' },
+                        { chinese: '根据Sandra的说法，城市不适合动物生活。', italian: 'Secondo Laura la città non è adatta agli animali.' },
+                        { chinese: 'Laura，待会儿提醒我给Felix买吃的。', italian: 'Laura, dopo mi ricordi di comprare da mangiare per Felix.' },
+                        { chinese: '你不觉得你有点太宠它了吗？', italian: 'Non ti sembra di viziarlo un po\' troppo?' },
+                        { chinese: '我（女性）对猫过敏。', italian: 'Sono allergica ai gatti.' },
+                        { chinese: '不，不是这样的！', italian: 'No, non è vero!' },
+                        { chinese: '我（女性）小时候养过一只狗，叫Romeo，它是一只非常聪明的狗。', italian: 'Da piccola avevo un cane, si chiamava Romeo, era un cane intelligentissimo.' },
+                        { chinese: '它能认出校车的声音。', italian: 'Riusciva a riconoscere il rumore dell\'autobus della scuola.' },
+                        { chinese: '我不知道。', italian: 'Non lo so.' },
+                        { chinese: '动物能给家里带来和谐。', italian: 'Gli animali portano armonia in casa.' },
+                        { chinese: '但你们住在乡下，我觉得在城市里动物会受苦！', italian: 'Però voi vivevate in campagna, secondo me, in città gli animali soffrono!' },
+                        { chinese: '看情况。', italian: 'Dipende.' },
+                        { chinese: 'Felix很快乐！', italian: 'Felix è contento!' }
+                    ]
+                },
+                {
+                    name: '4',
+                    pairs: [
+                        { chinese: '我（男性）小时候住在乡下，在一个大农庄里。', italian: 'Da piccolo vivevo in campagna in una grande fattoria.' },
+                        { chinese: '那里非常美，我养了很多动物。', italian: 'Era bellissima, avevo tanti animali.' },
+                        { chinese: '我整天在户外玩，玩得非常开心。', italian: 'Giocavo tutto il tempo all\'aperto, mi divertivo tantissimo.' },
+                        { chinese: '我还有一匹马，叫Furia。', italian: 'Avevo anche un cavallo, si chiamava Furia.' },
+                        { chinese: '我（女性）小时候住在城市里，下午几乎总是待在家里。', italian: 'Da piccola abitavo in città, trascorrevo i pomeriggi quasi sempre a casa.' },
+                        { chinese: '我没有养动物，因为家里没有空间。', italian: 'Non avevo animali perché non avevamo spazio in casa.' },
+                        { chinese: '夏天我会去乡下的爷爷奶奶家，在那里和他们的动物一起玩。', italian: 'In estate andavo dai nonni in campagna, lì giocavo con i loro animali.' }
+                    ]
+                },
+                {
+                    name: '5',
+                    pairs: [
+                        { chinese: '当你（女性）小的时候，你住在哪里？', italian: 'Quando eri piccola, dove vivevi?' },
+                        { chinese: '你有养动物吗？', italian: 'Avevi un animale?' },
+                        { chinese: '它叫什么名字？', italian: 'Come si chiamava?' },
+                        { chinese: '它是什么样的？', italian: 'Com\'era?' },
+                        { chinese: '你有养动物的朋友吗？', italian: 'Avevi amici che avevano animali?' },
+                        { chinese: '你父母喜欢动物吗？', italian: 'Ai tuoi piacevano gli animali?' }
+                    ]
+                },
+                {
+                    name: '6',
+                    pairs: [
+                        { chinese: 'Viola，过来看，爸爸给你带了一只狗！', italian: 'Viola, vieni a vedere, papà ti ha portato un cane!' },
+                        { chinese: '你喜欢吗？很可爱，对吧？', italian: 'Ti piace? È carino, vero?' },
+                        { chinese: '你（男性）疯了吗？你带了一只狗！', italian: 'Ma sei impazzito? Hai portato un cane!' },
+                        { chinese: '一只小狗，给Viola的。她一个人在家总是很孤单！', italian: 'Un cagnolino, per Viola. È sempre sola qui a casa!' },
+                        { chinese: '我们说好的，家里不能有动物！', italian: 'Eravamo d\'accordo su questo punto, niente animali in casa!' },
+                        { chinese: '谁来遛狗？', italian: 'Chi lo porta fuori?' },
+                        { chinese: '我早上出门前去遛它！', italian: 'La mattina lo porto fuori io prima di uscire!' },
+                        { chinese: '是啊，我倒要看看！', italian: 'Sì, voglio proprio vedere!' },
+                        { chinese: '你得把它送回去。', italian: 'Lo devi riportare indietro.' },
+                        { chinese: '我们不能养它。', italian: 'Non lo possiamo tenere.' },
+                        { chinese: '我相信我们可以照顾好它，不会有什么大问题。', italian: 'Sono sicuro che possiamo occuparci di lui senza grandi problemi.' },
+                        { chinese: '你总是出差！', italian: 'Parti sempre per lavoro!' },
+                        { chinese: '你不在的时候，谁带它去大小便？', italian: 'Quando sei fuori, chi lo porta a fare i bisogni?' },
+                        { chinese: '话说，它能长多大？', italian: 'Piuttosto, quanto cresce?' },
+                        { chinese: '你根本不在乎！', italian: 'Non ti interessa!' },
+                        { chinese: '它是什么品种？', italian: 'Che razza è?' },
+                        { chinese: '我们去睡觉吧，别闹了！', italian: 'Andiamo a letto, e senza storie!' }
+                    ]
+                },
+                {
+                    name: '7',
+                    pairs: [
+                        { chinese: '你们赞成还是反对在家里养动物？', italian: 'Siete favorevoli o contrari ad avere animali in casa?' },
+                        { chinese: '你们的家人呢？', italian: 'E i vostri familiari?' },
+                        { chinese: '我赞成，因为在我看来……', italian: 'Io sono favorevole perché secondo me...' },
+                        { chinese: '我（男性）反对，因为在我看来……', italian: 'Io sono contrario perché secondo me...' }
+                    ]
+                },
+                {
+                    name: '8',
+                    pairs: [
+                        { chinese: 'Enrico小时候夏天通常去托斯卡纳的叔叔家。', italian: 'Enrico da bambino di solito passava l\'estate in Toscana dagli zii.' },
+                        { chinese: '在山里，Marina认识了她的丈夫。', italian: 'In montagna Marina ha conosciuto suo marito.' },
+                        { chinese: '走廊里那张照片真好看。', italian: 'Che bella quella foto in corridoio.' },
+                        { chinese: 'Enrico，是你小时候吗？', italian: 'Enrico, sei tu da bambino?' },
+                        { chinese: '那时候我11岁，那是我第一次坐飞机。', italian: 'Avevo 11 anni e quella è stata la prima volta che ho viaggiato in aereo.' },
+                        { chinese: '我（女性）从没去过撒丁岛。', italian: 'Non sono mai stata in Sardegna.' },
+                        { chinese: '说实话，我（女性）小时候很少去海边。', italian: 'A dire la verità, da piccola andavo poco al mare.' },
+                        { chinese: '真的吗？那你怎么过夏天的？', italian: 'Davvero? E come passavi l\'estate?' },
+                        { chinese: '我们通常会去乡下爷爷奶奶家。', italian: 'Di solito andavamo in montagna dai nonni.' },
+                        { chinese: '我一点也不喜欢，很无聊。', italian: 'A me non piaceva per niente, era molto noioso.' },
+                        { chinese: '每天早上我们去镇上买东西。', italian: 'Tutte le mattine andavamo in paese a fare la spesa.' },
+                        { chinese: '我爸爸买报纸，我妈妈带我去一个小而破旧的游乐场。', italian: 'Mio padre comprava il giornale e mia madre mi portava in un parco giochi piccolo e triste.' },
+                        { chinese: '我整天听奶奶的旧唱片或者看漫画。', italian: 'Ascoltavo tutto il giorno i vecchi dischi di mia nonna o leggevo i fumetti.' },
+                        { chinese: '那房子很大，甚至让我有点害怕。', italian: 'Era una casa enorme, mi faceva anche un po\' paura.' },
+                        { chinese: '我的妈呀，小可怜（女性）！', italian: 'Mamma mia, poverina!' }
+                    ]
+                },
+                {
+                    name: '12',
+                    pairs: [
+                        { chinese: '你回忆起童年会开心吗？', italian: 'Ripensi con piacere alla tua infanzia?' },
+                        { chinese: '我很少想起。', italian: 'Ci penso poco.' },
+                        { chinese: '最让我痛苦的是在家感觉不被爱。', italian: 'La cosa che più mi tormentava era la sensazione di essere poco amata in famiglia.' },
+                        { chinese: '我记得我会假装生病来吸引别人对我的注意。', italian: 'Mi ricordo che inventavo le malattie per attirare l\'attenzione su di me.' },
+                        { chinese: '你和父母关系如何？', italian: 'In che rapporti eri con i tuoi?' },
+                        { chinese: '我有一个严厉的父亲，会大发雷霆。', italian: 'Avevo un padre severo che faceva delle tremende sfuriate.' },
+                        { chinese: '然后是我和兄弟之间的争吵。', italian: 'Poi c\'erano le liti fra me e i miei fratelli.' },
+                        { chinese: '你有一个快乐的童年吗？', italian: 'Hai avuto un\'infanzia felice?' },
+                        { chinese: '你小时候是什么样的？性格怎么样？', italian: 'Com\'eri da bambina? Che carattere avevi?' },
+                        { chinese: '我不是很活泼。', italian: 'Non ero molto vivace.' },
+                        { chinese: '你（小时候）是个内向的孩子吗？', italian: 'Eri una bambina chiusa?' },
+                        { chinese: '我对Palermo一点印象都没有了。', italian: 'Di Palermo non ricordo niente.' },
+                        { chinese: '你喜欢上学吗？', italian: 'Ti piaceva andare a scuola?' },
+                        { chinese: '你喜欢学习吗？', italian: 'Ti piaceva studiare?' },
+                        { chinese: '我学得不好。', italian: 'Studiavo male.' },
+                        { chinese: '我（女性）擅长意大利语。', italian: 'Ero brava in italiano.' },
+                        { chinese: '在学校里最让你痛苦的是什么？', italian: 'Cos\'è che ti faceva soffrire di più nella scuola?' },
+                        { chinese: '不学习的时候你做什么？', italian: 'Quando non studiavi, cosa facevi?' },
+                        { chinese: '我父亲强迫我去爬山。', italian: 'Mio padre mi costringeva a fare le scalate in montagna.' },
+                        { chinese: '那然后你做什么？', italian: 'E allora cosa facevi?' },
+                        { chinese: '我跳得不好，但我玩得开心。', italian: 'Ballavo male, ma mi divertivo.' },
+                        { chinese: '我还是更喜欢待在家里看书。', italian: 'In fondo preferivo stare a casa a leggere.' },
+                        { chinese: '你看什么书？', italian: 'Cosa leggevi?' },
+                        { chinese: '你长大想做什么？', italian: 'Cosa pensavi di fare da grande?' },
+                        { chinese: '她经常生病。', italian: 'Era molto spesso malata.' },
+                        { chinese: '她父亲很少发火。', italian: 'Suo padre si arrabbiava raramente.' },
+                        { chinese: '她对出生城市记得不多。', italian: 'Non ricorda molto della città dove è nata.' },
+                        { chinese: '她七岁时离开了Palermo。', italian: 'Ha lasciato Palermo quando aveva sette anni.' },
+                        { chinese: '她在学校很无聊。', italian: 'A scuola si annoiava molto.' },
+                        { chinese: '她空闲时间很愿意去爬山。', italian: 'Nel tempo libero andava volentieri in montagna.' },
+                        { chinese: '她愿意跳舞。', italian: 'Ballava volentieri.' },
+                        { chinese: '她非常愿意读书和写作。', italian: 'Leggeva e scriveva molto volentieri.' }
+                    ]
+                },
+                {
+                    name: '13',
+                    pairs: [
+                        { chinese: '你（男性）出生在哪里？', italian: 'Dove sei nato?' },
+                        { chinese: '你一直住在同一个城市吗？', italian: 'Hai sempre vissuto nella stessa città?' },
+                        { chinese: '你喜欢上学吗？', italian: 'Ti piaceva andare a scuola?' },
+                        { chinese: '你最喜欢的科目是什么？', italian: 'Qual era la tua materia preferita?' },
+                        { chinese: '你不喜欢学校的什么？', italian: 'Che cosa non ti piaceva della scuola?' },
+                        { chinese: '不学习的时候你做什么？', italian: 'Quando non studiavi, che cosa facevi?' },
+                        { chinese: '你长大想做什么？', italian: 'Cosa pensavi di fare da grande?' }
+                    ]
+                }
+            ]
+        }
+    ];
+
+    // ============================================================
+    // 状态
+    // ============================================================
+    let currentSection = 0;
+    let currentIndex = 0;
+    let currentSubIndex = 0;
+    let currentPairs = [];
+    let learnedSet = new Set();
+
+    const chinesePrompt = document.getElementById('chinesePrompt');
+    const userInput = document.getElementById('userInput');
+    const checkBtn = document.getElementById('checkBtn');
+    const revealBtn = document.getElementById('revealBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultBox = document.getElementById('resultBox');
+    const currentNum = document.getElementById('currentNum');
+    const totalNum = document.getElementById('totalNum');
+    const learnedCount = document.getElementById('learnedCount');
+    const progressText = document.getElementById('progressText');
+    const tabBtns = document.querySelectorAll('.mode-tab');
+    const subTabs = document.getElementById('subTabs');
+
+    function getCurrentPairs() {
+        const section = SECTIONS[currentSection];
+        if (section.subSections) {
+            return section.subSections[currentSubIndex].pairs;
+        }
+        return section.pairs;
+    }
+
+    function getCurrentAlign() {
+        const section = SECTIONS[currentSection];
+        if (section.subSections) {
+            return section.subSections[currentSubIndex].pairs.length > 0 ? 'left' : 'center';
+        }
+        return section.align;
+    }
+
+    // ============================================================
+    // 渲染
+    // ============================================================
+    function renderCard() {
+        currentPairs = getCurrentPairs();
+        const pair = currentPairs[currentIndex] || { chinese: '（暂无题目）', italian: '' };
+        const section = SECTIONS[currentSection];
+        const align = getCurrentAlign();
+
+        if (align === 'center') {
+            chinesePrompt.classList.add('center');
+        } else {
+            chinesePrompt.classList.remove('center');
+        }
+
+        if (section.subSections && currentPairs.length === 0) {
+            chinesePrompt.innerHTML = '📝 内容准备中...';
+        } else {
+            chinesePrompt.innerHTML = formatChinese(pair.chinese);
+        }
+
+        userInput.value = '';
+        resultBox.innerHTML = `<span class="hint-empty">✏️ 输入后点击「检查」</span>`;
+        currentNum.textContent = currentPairs.length > 0 ? currentIndex + 1 : 0;
+        totalNum.textContent = currentPairs.length;
+        learnedCount.textContent = learnedSet.size;
+        const progress = currentPairs.length ? Math.round((learnedSet.size / currentPairs.length) * 100) : 0;
+        progressText.textContent = progress + '%';
+        prevBtn.disabled = (currentIndex === 0 || currentPairs.length === 0);
+        userInput.focus();
+    }
+
+    // ============================================================
+    // 操作
+    // ============================================================
+    function checkAnswer() {
+        const pair = currentPairs[currentIndex];
+        if (!pair) {
+            resultBox.innerHTML = `<span style="color:#b33c3c;">⚠️ 暂无题目</span>`;
+            return;
+        }
+        const userAns = userInput.value;
+        if (userAns.trim() === '') {
+            resultBox.innerHTML = `<span style="color:#b33c3c;">⚠️ 请先输入意大利语</span>`;
+            return;
+        }
+        const { html, isCorrect } = highlightDiff(userAns, pair.italian);
+        resultBox.innerHTML = html;
+        if (isCorrect) {
+            const key = currentIndex + '-' + pair.italian + '-' + currentSection + '-' + currentSubIndex;
+            learnedSet.add(key);
+            learnedCount.textContent = learnedSet.size;
+            const progress = currentPairs.length ? Math.round((learnedSet.size / currentPairs.length) * 100) : 0;
+            progressText.textContent = progress + '%';
+        } else {
+            userInput.focus();
+            userInput.select();
+        }
+    }
+
+    function revealAnswer() {
+        const pair = currentPairs[currentIndex];
+        if (!pair) {
+            resultBox.innerHTML = `<span style="color:#b33c3c;">⚠️ 暂无题目</span>`;
+            return;
+        }
+        resultBox.innerHTML = `<span class="answer-label">🔍 正确答案:</span> <span class="correct-answer">${pair.italian}</span>`;
+    }
+
+    function prevCard() {
+        if (currentPairs.length === 0) return;
+        if (currentIndex > 0) { currentIndex--; renderCard(); }
+    }
+
+    function nextCard() {
+        if (currentPairs.length === 0) {
+            renderCard();
+            return;
+        }
+        if (currentIndex < currentPairs.length - 1) { currentIndex++; }
+        else { currentIndex = 0; }
+        renderCard();
+    }
+
+    function renderSubTabs() {
+        const section = SECTIONS[currentSection];
+        subTabs.innerHTML = '';
+        if (section.subSections) {
+            subTabs.style.display = 'flex';
+            section.subSections.forEach((sub, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'sub-tab' + (idx === currentSubIndex ? ' active' : '');
+                btn.textContent = sub.name;
+                btn.dataset.sub = idx;
+                btn.addEventListener('click', function() {
+                    switchSubTab(parseInt(this.dataset.sub));
+                });
+                subTabs.appendChild(btn);
+            });
+        } else {
+            subTabs.style.display = 'none';
+        }
+    }
+
+    function switchSection(sectionIdx) {
+        if (sectionIdx === currentSection) return;
+        currentSection = sectionIdx;
+        currentIndex = 0;
+        currentSubIndex = 0;
+        learnedSet = new Set();
+
+        tabBtns.forEach((btn, idx) => btn.classList.toggle('active', idx === sectionIdx));
+
+        renderSubTabs();
+        currentPairs = getCurrentPairs();
+        renderCard();
+        userInput.focus();
+    }
+
+    function switchSubTab(subIdx) {
+        if (subIdx === currentSubIndex) return;
+        currentSubIndex = subIdx;
+        currentIndex = 0;
+        learnedSet = new Set();
+
+        const subBtns = subTabs.querySelectorAll('.sub-tab');
+        subBtns.forEach((btn, idx) => btn.classList.toggle('active', idx === subIdx));
+
+        currentPairs = getCurrentPairs();
+        renderCard();
+        userInput.focus();
+    }
+
+    // ============================================================
+    // 初始化
+    // ============================================================
+    function init() {
+        tabBtns.forEach((btn, idx) => {
+            btn.addEventListener('click', function() { switchSection(idx); });
+        });
+
+        checkBtn.addEventListener('click', checkAnswer);
+        revealBtn.addEventListener('click', revealAnswer);
+        prevBtn.addEventListener('click', prevCard);
+        nextBtn.addEventListener('click', nextCard);
+
+        userInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); checkAnswer(); }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); revealAnswer(); }
+            if (e.ctrlKey && e.key === 'ArrowRight') { e.preventDefault(); nextCard(); }
+            if (e.ctrlKey && e.key === 'ArrowLeft') { e.preventDefault(); prevCard(); }
+        });
+
+        currentSection = 0;
+        currentSubIndex = 0;
+        renderSubTabs();
+        subTabs.style.display = 'none';
+        currentPairs = SECTIONS[0].pairs;
+        renderCard();
+        console.log(`✅ Fuga A2 第1单元 · 已加载`);
+    }
+    init();
+</script>
+</body>
+</html>
